@@ -3,6 +3,8 @@ import Filter from './components/Filter'
 import NewPersonForm from './components/NewPersonForm'
 import Persons from './components/Persons'
 import personsService from '../../services/persons'
+import '../../index.css'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [filterValue, setFilterValue] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personsService
@@ -19,7 +22,7 @@ const App = () => {
         })
   }, [])
   
-  const addPerson = (event) => {
+  const addPerson = () => {
     if(persons.some(person => person.name === newName)){
         //Update Persons number
         if(window.confirm(`${newName} already exist, would you like to replace their number?`)){
@@ -29,7 +32,7 @@ const App = () => {
             personsService
                 .updateNumber(findPerson.id, changedPerson)
                 .then(returnedPerson => {
-                    setPersons(person.map(person => person.id !== findPerson.id ? person : returnedPerson))
+                    setPersons(persons.map(person => person.id !== findPerson.id ? person : returnedPerson))
                 })
         } else {
             return
@@ -62,6 +65,15 @@ const App = () => {
             console.log(response);
             setPersons(newObject)
         })
+        .catch(err => {
+            setErrorMessage(
+              `Note '${event.target.name}' was already removed from server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(newObject)
+        })
 
     personsService
         .getAll()
@@ -92,6 +104,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={filterValue} handleChange={handleInputChange} />
       <NewPersonForm handleAdd={addPerson} name={newName} number={newNumber} handleChange={handleInputChange} />
+      {errorMessage ? <Notification message={errorMessage} /> : null}
       <Persons filteredPeople={peopleToShow} handleDelete={deletePerson} />
     </div>
   )

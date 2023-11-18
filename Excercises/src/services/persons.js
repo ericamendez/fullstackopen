@@ -12,7 +12,6 @@ const addPerson = (newObject) => {
 }
 
 const updateNumber = (id, newObject) => {
-    console.log('update??');
     const request = axios.put(`${baseUrl}/${id}`, newObject)
     return request.then(response => response.data)
 }
