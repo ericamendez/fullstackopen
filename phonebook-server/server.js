@@ -7,6 +7,7 @@ const cors = require('cors')
 const Person = require('./models/person')
 
 app.use(express.static('dist'))
+app.use(express.json())
 app.use(cors())
 // Define a custom token for logging request body
 morgan.token('req-body', (req) => {
@@ -14,31 +15,48 @@ morgan.token('req-body', (req) => {
 });
 // Use the custom token in the log format
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req-body'));
-app.use(express.json())
 
-app.get('/', (request, response) => {
-    console.log(request.body);
-    response.send('<h1>Hello World!</h1>')
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+
+    next(error)
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
+
+app.get('/', (req, res) => {
+    console.log(req.body);
+    res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
-        response.json(persons)
+        res.json(persons)
     })
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (req, res) => {
     const date = new Date()
     const dateRes = `${date.toDateString()} ${date.toLocaleDateString()} ${date.toGMTString()}`
-    const infoRes = `Phonebook has info for ${data.length} people`
-    const send = `<p>${infoRes}</p><p>${dateRes}</p>`
-    response.send(send)
+
+    const person = Person.find({}).then(data => {
+        const infoRes = `Phonebook has info for ${data.length} people`
+        const send = `<p>${infoRes}</p><p>${dateRes}</p>`
+        res.send(send)
+    })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
         .then(person => {
-            if(person){
+            if (person) {
                 res.json(person)
             } else {
                 res.status(404).end()
@@ -46,11 +64,12 @@ app.get('/api/persons/:id', (req, res) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).end()
+            // res.status(400).send({ error: 'malformatted id' })
+            return next(err)
         })
 })
 
-app.post('/api/persons', async (req, res) => {
+app.post('/api/persons', async (req, res, next) => {
     const body = req.body
 
     if (!body.name) {
@@ -67,8 +86,19 @@ app.post('/api/persons', async (req, res) => {
 
     person.save().then(savedPerson => {
         res.json(savedPerson)
-    })
+    }).catch(error => next(error))
 
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const { name, number } = request.body
+
+    Person.findByIdAndUpdate(req.params.id, { name, number },
+        { new: true, runValidators: true, context: 'query' })
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', async (req, res) => {
