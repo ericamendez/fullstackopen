@@ -10,7 +10,8 @@
     "build:ui": "rm -rf dist && cd ../Excercises/ && npm run build && cp -r dist ../phonebook-server",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.11",
+    "eslint": "^8.54.0",
     "nodemon": "^3.0.1"
   }
 }
