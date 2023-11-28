@@ -91,7 +91,7 @@ app.post('/api/persons', async (req, res, next) => {
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
-    const { name, number } = request.body
+    const { name, number } = req.body
 
     Person.findByIdAndUpdate(req.params.id, { name, number },
         { new: true, runValidators: true, context: 'query' })
