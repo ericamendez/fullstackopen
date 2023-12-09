@@ -7,15 +7,30 @@ blogRouter.get('/', async (request, response) => {
 
 })
 
-blogRouter.post('/', async (request, response) => {
-    try {
-        const blog = await new Blog(request.body);
-        const result = await blog.save();
-        response.status(201).json(result);
-    } catch (error) {
-        // Handle any errors here
-        response.status(500).json({ error: 'Internal Server Error' });
+blogRouter.get('/:id', async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    if (blog) {
+        response.json(blog)
+    } else {
+        response.status(404).end()
     }
+})
+
+blogRouter.post('/', async (request, response, next) => {
+    const blog = await new Blog(request.body);
+    const result = await blog.save();
+    response.status(201).json(result);
+})
+
+blogRouter.put('/:id', async (request, response) => {
+    const {title, author, url} = request.body
+    const result = await Blog.findByIdAndUpdate(request.params.id, {title, author, url}, { new: true, runValidators: true, context: 'query' })
+    response.status(201).json(result);
+})
+
+blogRouter.delete('/:id', async (request, response) => {
+    await Blog.findByIdAndDelete(request.params.id)
+    response.status(204).end()
 })
 
 module.exports = blogRouter

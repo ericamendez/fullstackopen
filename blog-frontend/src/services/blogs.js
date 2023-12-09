@@ -6,9 +6,22 @@ const getAll = async () => {
   return request.data;
 }
 
-const createBlog = async (newObject) => {
-  const response = await axios.post(baseURL, newObject);
-  return response.data;
+const getBlog = async () => {
+
 }
 
-export default { getAll, createBlog };
+const updateBlog = async (id, newObject) => {
+    const request = await axios.put(`${baseURL}/${id}`, newObject)
+    return request.data;
+}
+
+const likeBlog = async () => {
+
+}
+
+const createBlog = async (newObject) => {
+  const request = await axios.post(baseURL, newObject);
+  return request.data;
+}
+
+export default { getAll, createBlog, updateBlog };
