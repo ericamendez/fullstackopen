@@ -28,6 +28,12 @@ blogRouter.put('/:id', async (request, response) => {
     response.status(201).json(result);
 })
 
+blogRouter.put('/likes/:id', async (request, response) => {
+    const {likes} = request.body
+    const result = await Blog.findByIdAndUpdate(request.params.id, {likes}, { new: true, runValidators: true, context: 'query' })
+    response.status(201).json(result);
+})
+
 blogRouter.delete('/:id', async (request, response) => {
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
