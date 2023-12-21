@@ -1,4 +1,4 @@
-const Blogs = ({ blogs, edit, isEdit, editID, inputChange, save }) => {
+const Blogs = ({ blogs, edit, isEdit, editID, inputChange, save, like, handleDelete }) => {
   return (
     <div>
       <h1>Blogs</h1>
@@ -9,8 +9,9 @@ const Blogs = ({ blogs, edit, isEdit, editID, inputChange, save }) => {
             <p>URL: {isEdit && blog._id == editID ? <input defaultValue={blog.url} onChange={inputChange} name={'url'}></input> : blog.url}</p>
             <p>Author: {isEdit && blog._id == editID ? <input defaultValue={blog.author} onChange={inputChange} name={'author'}></input> : blog.author}</p>
             <p>Likes: {blog.likes}</p>
-            <button>{`<3`}</button>
+            <button onClick={like}>{`<3`}</button>
             {isEdit ? <button onClick={save} >Save</button> : <button onClick={edit}>Edit</button>}
+            <button onClick={handleDelete} >Delete</button>
           </div>
         )
       
