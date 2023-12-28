@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BlogForm from "./components/BlogForm";
 import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
+import Login from "./components/Login";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -16,6 +17,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -27,6 +29,15 @@ function App() {
       fetchBlogs();
     } catch (err) {
       console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
@@ -53,7 +64,6 @@ function App() {
   };
 
   const handleFormSubmit = (e) => {
-
     const newBlog = {
       title,
       url,
@@ -107,7 +117,7 @@ function App() {
   };
 
   const handlelikes = async (e) => {
-    const id = e.target.parentNode.getAttribute("value");
+    const id = e.target.parentNode.parentNode.getAttribute("value");
 
     const filtered = blogs.filter((blog) => blog._id === id);
     const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 };
@@ -146,6 +156,7 @@ function App() {
 
       console.log(user);
 
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
       setUsername("");
@@ -158,6 +169,16 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedBlogappUser");
+    setUser(null);
+    setLoginVisible(false)
+  }
+
+  const handleShowLogin = () => {
+    setLoginVisible(!loginVisible)
+  }
+
   return (
     <div>
       {user === null ? (
@@ -167,10 +188,12 @@ function App() {
           handleLogin={handleLogin}
           inputChange={handleInputChanges}
           user={user}
+          loginVisible={loginVisible}
+          handleShowLogin={handleShowLogin}
         />
       ) : (
         <div>
-          <p>{user.name} is logged in</p>
+          <Login user={user.name} handleLogout={handleLogout}/>
           <BlogForm
             inputChange={handleInputChanges}
             submit={handleFormSubmit}
@@ -186,6 +209,7 @@ function App() {
         save={handleEditSave}
         like={handlelikes}
         handleDelete={handleDelete}
+        user={user}
       />
     </div>
   );

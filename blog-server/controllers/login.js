@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
 
+
 loginRouter.post('/', async (request, response) => {
     const { username, password } = request.body
 
@@ -28,10 +29,11 @@ loginRouter.post('/', async (request, response) => {
         process.env.SECRET,
         { expiresIn: 60 * 60 }
     )
+    console.log(user);
 
     response
         .status(200)
-        .send({ token, username: user.username, name: user.name })
+        .send({ token, username: user.username, name: user.name, id: user._id })
 })
 
 module.exports = loginRouter

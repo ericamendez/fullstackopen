@@ -13,7 +13,7 @@ const loginRouter = require('./controllers/login')
 mongoose.set('strictQuery', false)
 app.use(middleware.requestLogger)
 
-
+console.log('jkhgdkejhdkej')
 mongoose.connect(MONGODB_URI)
     .then(result => {
         console.log('connected to MongoDB')
