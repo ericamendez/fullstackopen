@@ -3,6 +3,7 @@ import BlogForm from "./components/BlogForm";
 import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
 import Login from "./components/Login";
+import Toggable from "./components/Toggable";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -17,7 +18,6 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -69,7 +69,7 @@ function App() {
       url,
       author,
       likes: 0,
-      userId: "657773cf37f8320c5a5ad9d5", // THIS NEEDS TO CHANGE FOR USER LOGGED IN
+      userId: user.id,
     };
 
     const addBlog = async () => {
@@ -87,10 +87,10 @@ function App() {
   };
 
   const handleEdit = (e) => {
-    const id = e.target.parentNode.getAttribute("value");
-    const eTitle = e.target.parentNode.childNodes[0].childNodes[1].textContent;
-    const eUrl = e.target.parentNode.childNodes[1].childNodes[1].textContent;
-    const eAuthor = e.target.parentNode.childNodes[2].childNodes[1].textContent;
+    const id = e.target.getAttribute("value");
+    const eTitle = e.target.getAttribute("title")
+    const eUrl = e.target.getAttribute("url")
+    const eAuthor = e.target.getAttribute("author")
 
     setIsEdit(!isEdit);
     setEditID(id);
@@ -136,7 +136,7 @@ function App() {
       return;
     }
 
-    const id = e.target.parentNode.getAttribute("value");
+    const id = e.target.getAttribute("value");
 
     const updatedBlogs = blogs.filter((blog) => blog._id !== id);
 
@@ -172,32 +172,34 @@ function App() {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
     setUser(null);
-    setLoginVisible(false)
-  }
+    setLoginVisible(false);
+  };
 
   const handleShowLogin = () => {
-    setLoginVisible(!loginVisible)
-  }
+    setLoginVisible(!loginVisible);
+  };
 
   return (
     <div>
       {user === null ? (
-        <LoginForm
-          username={username}
-          password={password}
-          handleLogin={handleLogin}
-          inputChange={handleInputChanges}
-          user={user}
-          loginVisible={loginVisible}
-          handleShowLogin={handleShowLogin}
-        />
+        <Toggable buttonLabel="login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleLogin={handleLogin}
+            inputChange={handleInputChanges}
+            user={user}
+          />
+        </Toggable>
       ) : (
         <div>
-          <Login user={user.name} handleLogout={handleLogout}/>
-          <BlogForm
-            inputChange={handleInputChanges}
-            submit={handleFormSubmit}
-          />
+          <Login user={user.name} handleLogout={handleLogout} />
+          <Toggable buttonLabel="add blog">
+            <BlogForm
+              inputChange={handleInputChanges}
+              submit={handleFormSubmit}
+            />
+          </Toggable>
         </div>
       )}
       <Blogs

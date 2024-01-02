@@ -64,9 +64,17 @@ const Blogs = ({
                   {isEdit ? (
                     <button onClick={save}>Save</button>
                   ) : (
-                    <button onClick={edit}>Edit</button>
+                    <button
+                      onClick={edit}
+                      value={blog._id}
+                      title={blog.title}
+                      author={blog.author}
+                      url={blog.url}
+                    >
+                      Edit
+                    </button>
                   )}
-                  <button onClick={handleDelete}>Delete</button>
+                  <button onClick={handleDelete} value={blog._id}>Delete</button>
                 </div>
               </div>
             )}

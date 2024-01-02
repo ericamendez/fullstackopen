@@ -1,4 +1,5 @@
 const BlogForm = ({ inputChange, submit}) => {
+
   return (
     <div>
       <h1>Add A Blog Post</h1>
