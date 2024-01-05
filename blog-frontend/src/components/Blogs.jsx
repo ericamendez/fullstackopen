@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const Blogs = ({
   blogs,
   edit,
@@ -9,6 +11,21 @@ const Blogs = ({
   handleDelete,
   user,
 }) => {
+
+  const [showBlogs, setShowBlogs] = useState([]);
+
+  const toggleShowMore = (e) => {
+    const id = e.target.getAttribute('value')
+
+    if (showBlogs.includes(id)) {
+      setShowBlogs(showBlogs.filter(blogId => blogId !== id))
+    } else {
+      console.log('hi');
+      setShowBlogs([...showBlogs, id])
+    }
+
+  }
+
   return (
     <div>
       <h1>All Blogs</h1>
@@ -18,66 +35,73 @@ const Blogs = ({
         };
         return (
           <div key={blog._id} value={blog._id}>
-            <h2>
-              Title:{" "}
-              {isEdit && blog._id == editID ? (
-                <input
-                  defaultValue={blog.title}
-                  onChange={inputChange}
-                  name={"title"}
-                ></input>
+            <div>
+              <h2>
+                Title:{" "}
+                {isEdit && blog._id == editID ? (
+                  <input
+                    defaultValue={blog.title}
+                    onChange={inputChange}
+                    name={"title"}
+                  ></input>
+                ) : (
+                  blog.title
+                )}
+              </h2>
+              <button onClick={toggleShowMore} value={blog._id}>{showBlogs.includes(blog._id) ? "hide" : "view"}</button>
+            </div>
+            <div style={showBlogs.includes(blog._id) ? {display:""} : {display:'none'}}>
+              <p>
+                URL:{" "}
+                {isEdit && blog._id == editID ? (
+                  <input
+                    defaultValue={blog.url}
+                    onChange={inputChange}
+                    name={"url"}
+                  ></input>
+                ) : (
+                  blog.url
+                )}
+              </p>
+              <p>
+                Author:{" "}
+                {isEdit && blog._id == editID ? (
+                  <input
+                    defaultValue={blog.author}
+                    onChange={inputChange}
+                    name={"author"}
+                  ></input>
+                ) : (
+                  blog.author
+                )}
+              </p>
+              <p>Likes: {blog.likes}</p>
+              {user === null ? (
+                ""
               ) : (
-                blog.title
-              )}
-            </h2>
-            <p>
-              URL:{" "}
-              {isEdit && blog._id == editID ? (
-                <input
-                  defaultValue={blog.url}
-                  onChange={inputChange}
-                  name={"url"}
-                ></input>
-              ) : (
-                blog.url
-              )}
-            </p>
-            <p>
-              Author:{" "}
-              {isEdit && blog._id == editID ? (
-                <input
-                  defaultValue={blog.author}
-                  onChange={inputChange}
-                  name={"author"}
-                ></input>
-              ) : (
-                blog.author
-              )}
-            </p>
-            <p>Likes: {blog.likes}</p>
-            {user === null ? (
-              ""
-            ) : (
-              <div>
-                <button onClick={like}>{`<3`}</button>
-                <div style={showButtonsWhenUserLoggedIn}>
-                  {isEdit ? (
-                    <button onClick={save}>Save</button>
-                  ) : (
-                    <button
-                      onClick={edit}
-                      value={blog._id}
-                      title={blog.title}
-                      author={blog.author}
-                      url={blog.url}
-                    >
-                      Edit
+                <div>
+                  <button onClick={like}>{`<3`}</button>
+                  <div style={showButtonsWhenUserLoggedIn}>
+                    {isEdit ? (
+                      <button onClick={save}>Save</button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        value={blog._id}
+                        title={blog.title}
+                        author={blog.author}
+                        url={blog.url}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    <button onClick={handleDelete} value={blog._id}>
+                      Delete
                     </button>
-                  )}
-                  <button onClick={handleDelete} value={blog._id}>Delete</button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         );
       })}
