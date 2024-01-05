@@ -11,20 +11,19 @@ const Blogs = ({
   handleDelete,
   user,
 }) => {
-
   const [showBlogs, setShowBlogs] = useState([]);
 
   const toggleShowMore = (e) => {
-    const id = e.target.getAttribute('value')
+    const id = e.target.getAttribute("value");
 
     if (showBlogs.includes(id)) {
-      setShowBlogs(showBlogs.filter(blogId => blogId !== id))
+      setShowBlogs(showBlogs.filter((blogId) => blogId !== id));
     } else {
-      console.log('hi');
-      setShowBlogs([...showBlogs, id])
+      console.log("hi");
+      setShowBlogs([...showBlogs, id]);
     }
+  };
 
-  }
 
   return (
     <div>
@@ -34,8 +33,8 @@ const Blogs = ({
           display: user != null && user.id === blog.user ? "" : "none",
         };
         return (
-          <div key={blog._id} value={blog._id}>
-            <div>
+          <div key={blog._id} className={blog.user == user.id ? "all-blog-container blog-user" : "all-blog-container"}>
+            <div className="blog">
               <h2>
                 Title:{" "}
                 {isEdit && blog._id == editID ? (
@@ -48,9 +47,20 @@ const Blogs = ({
                   blog.title
                 )}
               </h2>
-              <button onClick={toggleShowMore} value={blog._id}>{showBlogs.includes(blog._id) ? "hide" : "view"}</button>
+              <div>
+                <button onClick={toggleShowMore} value={blog._id}>
+                  {showBlogs.includes(blog._id) ? "hide" : "view"}
+                </button>
+              </div>
             </div>
-            <div style={showBlogs.includes(blog._id) ? {display:""} : {display:'none'}}>
+            <div
+              style={
+                showBlogs.includes(blog._id)
+                  ? { display: "" }
+                  : { display: "none" }
+              }
+              className={blog.user == user.id ? "blog-user" : ""}
+            >
               <p>
                 URL:{" "}
                 {isEdit && blog._id == editID ? (
@@ -79,8 +89,8 @@ const Blogs = ({
               {user === null ? (
                 ""
               ) : (
-                <div>
-                  <button onClick={like}>{`<3`}</button>
+                <div className="button-container">
+                  <button onClick={like} value={blog._id}>{`<3`}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
                     {isEdit ? (
                       <button onClick={save}>Save</button>

@@ -4,6 +4,7 @@ import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
 import Login from "./components/Login";
 import Toggable from "./components/Toggable";
+import "./App.css";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -22,7 +23,7 @@ function App() {
   useEffect(() => {
     const fetchBlogs = async () => {
       const allBlogs = await blogService.getAll();
-      setBlogs(allBlogs);
+      setBlogs(allBlogs.sort((a, b) => b.likes - a.likes));
     };
 
     try {
@@ -117,7 +118,7 @@ function App() {
   };
 
   const handlelikes = async (e) => {
-    const id = e.target.parentNode.parentNode.getAttribute("value");
+    const id = e.target.getAttribute("value");
 
     const filtered = blogs.filter((blog) => blog._id === id);
     const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 };
@@ -128,7 +129,7 @@ function App() {
 
     await blogService.likeBlog(id, likesObject);
 
-    setBlogs(newObject);
+    setBlogs(newObject.sort((a, b) => b.likes - a.likes));
   };
 
   const handleDelete = async (e) => {
