@@ -33,7 +33,7 @@ const Blogs = ({
           display: user != null && user.id === blog.user ? "" : "none",
         };
         return (
-          <div key={blog._id} className={blog.user == user.id ? "all-blog-container blog-user" : "all-blog-container"}>
+          <div key={blog._id} className={user && blog.user == user.id ? "all-blog-container blog-user" : "all-blog-container"}>
             <div className="blog">
               <h2>
                 Title:{" "}
@@ -59,7 +59,7 @@ const Blogs = ({
                   ? { display: "" }
                   : { display: "none" }
               }
-              className={blog.user == user.id ? "blog-user" : ""}
+              className={user && blog.user == user.id ? "blog-user" : ""}
             >
               <p>
                 URL:{" "}
