@@ -1,4 +1,4 @@
-const BlogForm = ({ inputChange, submit}) => {
+const BlogForm = ({ inputChange, submit }) => {
 
   return (
     <div>
@@ -6,20 +6,20 @@ const BlogForm = ({ inputChange, submit}) => {
       <form>
         <div>
           <label>Title:</label>
-          <input type="text" onChange={inputChange} required name="title" />
+          <input type="text" onChange={inputChange} required name="title" placeholder='input title' id="title" />
         </div>
         <div>
           <label>URL:</label>
-          <input required onChange={inputChange} name="url" />
+          <input type="text" required onChange={inputChange} name="url" id="url" />
         </div>
         <div>
           <label>Author:</label>
-          <input type="text" required onChange={inputChange} name="author" />
+          <input type="text" required onChange={inputChange} name="author" id="author" />
         </div>
-        <button onClick={submit}>Add Blog</button>
+        <button onClick={submit}>Submit</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm

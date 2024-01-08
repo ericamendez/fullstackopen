@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const Blogs = ({
   blogs,
@@ -11,37 +11,34 @@ const Blogs = ({
   handleDelete,
   user,
 }) => {
-  const [showBlogs, setShowBlogs] = useState([]);
+  const [showBlogs, setShowBlogs] = useState([])
 
   const toggleShowMore = (e) => {
-    const id = e.target.getAttribute("value");
+    const id = e.target.getAttribute('value')
 
     if (showBlogs.includes(id)) {
-      setShowBlogs(showBlogs.filter((blogId) => blogId !== id));
+      setShowBlogs(showBlogs.filter((blogId) => blogId !== id))
     } else {
-      console.log("hi");
-      setShowBlogs([...showBlogs, id]);
+      setShowBlogs([...showBlogs, id])
     }
-  };
-
+  }
 
   return (
     <div>
       <h1>All Blogs</h1>
       {blogs.map((blog) => {
         const showButtonsWhenUserLoggedIn = {
-          display: user != null && user.id === blog.user ? "" : "none",
-        };
+          display: user !== null && user.id === blog.user ? '' : 'none',
+        }
         return (
-          <div key={blog._id} className={user && blog.user == user.id ? "all-blog-container blog-user" : "all-blog-container"}>
+          <div key={blog._id} className={user && blog.user === user.id ? 'all-blog-container blog-user' : 'all-blog-container'}>
             <div className="blog">
               <h2>
-                Title:{" "}
-                {isEdit && blog._id == editID ? (
+                {isEdit && blog._id === editID ? (
                   <input
                     defaultValue={blog.title}
                     onChange={inputChange}
-                    name={"title"}
+                    name={'title'}
                   ></input>
                 ) : (
                   blog.title
@@ -49,37 +46,37 @@ const Blogs = ({
               </h2>
               <div>
                 <button onClick={toggleShowMore} value={blog._id}>
-                  {showBlogs.includes(blog._id) ? "hide" : "view"}
+                  {showBlogs.includes(blog._id) ? 'hide' : 'view'}
                 </button>
               </div>
             </div>
             <div
               style={
                 showBlogs.includes(blog._id)
-                  ? { display: "" }
-                  : { display: "none" }
+                  ? { display: '' }
+                  : { display: 'none' }
               }
-              className={user && blog.user == user.id ? "blog-user" : ""}
+              className={user && blog.user === user.id ? 'blog-user' : ''}
             >
               <p>
-                URL:{" "}
-                {isEdit && blog._id == editID ? (
+                URL:{' '}
+                {isEdit && blog._id === editID ? (
                   <input
                     defaultValue={blog.url}
                     onChange={inputChange}
-                    name={"url"}
+                    name={'url'}
                   ></input>
                 ) : (
                   blog.url
                 )}
               </p>
               <p>
-                Author:{" "}
-                {isEdit && blog._id == editID ? (
+                Author:{' '}
+                {isEdit && blog._id === editID ? (
                   <input
                     defaultValue={blog.author}
                     onChange={inputChange}
-                    name={"author"}
+                    name={'author'}
                   ></input>
                 ) : (
                   blog.author
@@ -87,25 +84,21 @@ const Blogs = ({
               </p>
               <p>Likes: {blog.likes}</p>
               {user === null ? (
-                ""
+                ''
               ) : (
                 <div className="button-container">
-                  <button onClick={like} value={blog._id}>{`<3`}</button>
+                  <button onClick={like} value={blog._id}>{'<3'}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
                     {isEdit ? (
                       <button onClick={save}>Save</button>
                     ) : (
                       <button
-                        onClick={edit}
-                        value={blog._id}
-                        title={blog.title}
-                        author={blog.author}
-                        url={blog.url}
+                        onClick={() => edit(blog._id, blog.title, blog.author, blog.url)}
                       >
                         Edit
                       </button>
                     )}
-                    <button onClick={handleDelete} value={blog._id}>
+                    <button onClick={handleDelete} value={blog._id} className="delete-button">
                       Delete
                     </button>
                   </div>
@@ -113,10 +106,10 @@ const Blogs = ({
               )}
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
-export default Blogs;
+export default Blogs

@@ -3,7 +3,7 @@ require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
-const {MONGODB_URI} = require('./utils/config')
+const { MONGODB_URI } = require('./utils/config')
 const middleware = require('./utils/middleware')
 
 const blogRouter = require('./controllers/blogs')
@@ -33,5 +33,10 @@ app.use(middleware.errorHandler)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+
+if (process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/testing')
+    app.use('/api/testing', testingRouter)
+}
 
 module.exports = app

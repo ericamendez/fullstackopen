@@ -1,12 +1,11 @@
 const Login = ({ user, handleLogout }) => {
   return (
-    <div>
+    <div className="logged-in">
       <p>
-        {user} is logged in
-        <button onClick={handleLogout}>Logout</button>
+        {user} is logged in <button onClick={handleLogout}>Logout</button>
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

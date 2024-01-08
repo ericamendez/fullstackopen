@@ -1,69 +1,69 @@
-import { useEffect, useState, useRef } from "react";
-import BlogForm from "./components/BlogForm";
-import Blogs from "./components/Blogs";
-import LoginForm from "./components/LoginForm";
-import Login from "./components/Login";
-import Toggable from "./components/Toggable";
-import "./App.css";
+import { useEffect, useState, useRef } from 'react'
+import BlogForm from './components/BlogForm'
+import Blogs from './components/Blogs'
+import LoginForm from './components/LoginForm'
+import Login from './components/Login'
+import Togglable from './components/Togglable'
+import './App.css'
 
-import blogService from "./services/blogs";
-import loginService from "./services/login";
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 function App() {
-  const [blogs, setBlogs] = useState([]);
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [author, setAuthor] = useState("");
-  const [isEdit, setIsEdit] = useState(false);
-  const [editID, setEditID] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [loginVisible, setLoginVisible] = useState(false);
+  const [blogs, setBlogs] = useState([])
+  const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
+  const [author, setAuthor] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
+  const [editID, setEditID] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const allBlogs = await blogService.getAll();
-      setBlogs(allBlogs.sort((a, b) => b.likes - a.likes));
-    };
+      const allBlogs = await blogService.getAll()
+      setBlogs(allBlogs.sort((a, b) => b.likes - a.likes))
+    }
 
     try {
-      fetchBlogs();
+      fetchBlogs()
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const handleInputChanges = (e) => {
     switch (e.target.name) {
-      case "title":
-        setTitle(e.target.value);
-        break;
-      case "url":
-        setUrl(e.target.value);
-        break;
-      case "author":
-        setAuthor(e.target.value);
-        break;
-      case "username":
-        setUsername(e.target.value);
-        break;
-      case "password":
-        setPassword(e.target.value);
-        break;
-      default:
-        console.log("Something else changed");
+    case 'title':
+      setTitle(e.target.value)
+      break
+    case 'url':
+      setUrl(e.target.value)
+      break
+    case 'author':
+      setAuthor(e.target.value)
+      break
+    case 'username':
+      setUsername(e.target.value)
+      break
+    case 'password':
+      setPassword(e.target.value)
+      break
+    default:
+      console.log('Something else changed')
     }
-  };
+  }
 
   const handleFormSubmit = (e) => {
     const newBlog = {
@@ -72,119 +72,114 @@ function App() {
       author,
       likes: 0,
       userId: user.id,
-    };
+    }
 
     const addBlog = async () => {
-      const returnedBlog = await blogService.createBlog(newBlog);
-      setBlogs(blogs.concat(returnedBlog));
-    };
+      const returnedBlog = await blogService.createBlog(newBlog)
+      setBlogs(blogs.concat(returnedBlog))
+    }
 
     try {
-      addBlog();
+      addBlog()
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
 
-    console.log("Form submitted");
-  };
+    console.log('Form submitted')
+  }
 
-  const handleEdit = (e) => {
-    const id = e.target.getAttribute("value");
-    const eTitle = e.target.getAttribute("title")
-    const eUrl = e.target.getAttribute("url")
-    const eAuthor = e.target.getAttribute("author")
+  const handleEdit = (id, eTitle, eAuthor, eUrl) => {
 
-    setIsEdit(!isEdit);
-    setEditID(id);
-    setTitle(eTitle);
-    setUrl(eUrl);
-    setAuthor(eAuthor);
-  };
+    setIsEdit(!isEdit)
+    setEditID(id)
+    setTitle(eTitle)
+    setUrl(eUrl)
+    setAuthor(eAuthor)
+  }
 
   const handleEditSave = async () => {
-    console.log("saved");
-    setIsEdit(!isEdit);
+    setIsEdit(!isEdit)
 
-    const filtered = blogs.filter((blog) => blog._id === editID);
-    const updatedBlog = { ...filtered[0], title, url, author };
+    const filtered = blogs.filter((blog) => blog._id === editID)
+    const updatedBlog = { ...filtered[0], title, url, author }
 
     const updatedBlogs = blogs.map((blog) =>
-      blog._id == editID ? updatedBlog : blog
-    );
-    console.log(updatedBlogs);
+      blog._id === editID ? updatedBlog : blog
+    )
+    console.log(updatedBlogs)
 
-    await blogService.updateBlog(editID, updatedBlog);
+    await blogService.updateBlog(editID, updatedBlog)
 
-    setBlogs(updatedBlogs);
-  };
+    setBlogs(updatedBlogs)
+  }
 
   const handlelikes = async (e) => {
-    const id = e.target.getAttribute("value");
+    const id = e.target.getAttribute('value')
 
-    const filtered = blogs.filter((blog) => blog._id === id);
-    const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 };
+    const filtered = blogs.filter((blog) => blog._id === id)
+    const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 }
 
     const newObject = blogs.map((blog) =>
-      blog._id == id ? likesObject : blog
-    );
+      blog._id === id ? likesObject : blog
+    )
 
-    await blogService.likeBlog(id, likesObject);
+    await blogService.likeBlog(id, likesObject)
 
-    setBlogs(newObject.sort((a, b) => b.likes - a.likes));
-  };
+    setBlogs(newObject.sort((a, b) => b.likes - a.likes))
+  }
 
   const handleDelete = async (e) => {
-    if (!window.confirm(`Are you sure you want to delete`)) {
-      return;
+    if (!window.confirm('Are you sure you want to delete')) {
+      return
     }
 
-    const id = e.target.getAttribute("value");
+    const id = e.target.getAttribute('value')
 
-    const updatedBlogs = blogs.filter((blog) => blog._id !== id);
+    const updatedBlogs = blogs.filter((blog) => blog._id !== id)
 
-    await blogService.deleteBlog(id);
+    await blogService.deleteBlog(id)
 
-    setBlogs(updatedBlogs);
-  };
+    setBlogs(updatedBlogs)
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
-    console.log("logging in with", username, password);
+    event.preventDefault()
+    console.log('logging in with', username, password)
     try {
       const user = await loginService.login({
         username,
         password,
-      });
+      })
 
-      console.log(user);
+      console.log(user)
 
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      console.log("Wrong credentials");
+      console.log('Wrong credentials')
       setTimeout(() => {
-        console.log(null);
-      }, 5000);
+        console.log(null)
+      }, 5000)
     }
-  };
+  }
 
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
-    setLoginVisible(false);
-  };
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+    setLoginVisible(false)
+  }
 
   const handleShowLogin = () => {
-    setLoginVisible(!loginVisible);
-  };
+    setLoginVisible(!loginVisible)
+  }
 
   return (
     <div>
       {user === null ? (
-        <Toggable buttonLabel="login">
+        <Togglable buttonLabel="login">
           <LoginForm
             username={username}
             password={password}
@@ -192,16 +187,16 @@ function App() {
             inputChange={handleInputChanges}
             user={user}
           />
-        </Toggable>
+        </Togglable>
       ) : (
         <div>
           <Login user={user.name} handleLogout={handleLogout} />
-          <Toggable buttonLabel="add blog">
+          <Togglable buttonLabel="add blog">
             <BlogForm
               inputChange={handleInputChanges}
               submit={handleFormSubmit}
             />
-          </Toggable>
+          </Togglable>
         </div>
       )}
       <Blogs
@@ -216,7 +211,7 @@ function App() {
         user={user}
       />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
