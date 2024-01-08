@@ -8,4 +8,3 @@
 - MVC
 - Token authentication
 - The user identified by the token is designated as the creator of the blog and can modify the blog
-- Custom configuration of .eslintrc.cjs file

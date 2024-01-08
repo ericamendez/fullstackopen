@@ -10,5 +10,3 @@
 - Custom configuration of .eslintrc.cjs file
 - React testing with Jest
 - End to end testing with Cypress
-
-...
