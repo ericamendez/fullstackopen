@@ -5,9 +5,11 @@ const AnecdoteForm = () => {
   
   const dispatch = useDispatch();
 
-  const addAnecdoteHandler = (event) => {
+  const addAnecdoteHandler = async (event) => {
     event.preventDefault();
-    dispatch(addAnecdote(event.target.anecdote.value));
+    const content = event.target.anecdote.value;
+    event.target.anecdote.value = "";
+    dispatch(addAnecdote(content));
   };
 
   return (
