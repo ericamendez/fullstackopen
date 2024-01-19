@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useMatch,
+} from "react-router-dom";
 import Menu from "./components/Menu";
 import AnecdoteList from "./components/AnecdoteList";
 import About from "./components/About";
 import Footer from "./components/Footer";
 import CreateNew from "./components/CreateNew";
 import Anecdote from "./components/Anecdote";
+import Login from "./components/Login";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -24,6 +30,8 @@ const App = () => {
       id: 2,
     },
   ]);
+
+  const [user, setUser] = useState(null);
 
   // const [notification, setNotification] = useState("");
 
@@ -45,21 +53,29 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match 
+    ? anecdote.find(anecdote => anecdote.id === Number(match.params.id))
+    : null
+
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
-        <Menu />
-        <Routes>
-          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route
-            path="/anecdotes/:id"
-            element={<Anecdote anecdotes={anecdotes} />}
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/createNew" element={<CreateNew addNew={addNew} />} />
-        </Routes>
-      </Router>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdote={anecdote} />}
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/createNew" element={<CreateNew addNew={addNew} />} />
+        <Route
+          path="/users"
+          element={user ? <Users /> : <Navigate replace to="/login" />}
+        />
+        <Route path="/login" element={<Login />} />
+      </Routes>
       <Footer />´
     </div>
   );
