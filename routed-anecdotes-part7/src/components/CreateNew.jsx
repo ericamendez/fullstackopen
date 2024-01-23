@@ -1,4 +1,4 @@
-import {useField} from "../hooks/index";
+import {useField} from "../hooks";
 
 const CreateNew = (props) => {
     const content = useField("text");
@@ -14,6 +14,13 @@ const CreateNew = (props) => {
         votes: 0,
       });
     };
+
+    const handleReset = (e) => {
+        e.preventDefault();
+        content.onReset();
+        author.onReset();
+        info.onReset();
+    }
   
     return (
       <div>
@@ -45,6 +52,7 @@ const CreateNew = (props) => {
             />
           </div>
           <button>create</button>
+          <button onClick={handleReset}>reset</button>
         </form>
       </div>
     );
