@@ -1,0 +1,53 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "http://localhost:3005/notes": "",
+      "id": 3
+    },
+    {
+      "http://localhost:3005/notes": "",
+      "id": 4
+    },
+    {
+      "http://localhost:3005/notes": "",
+      "id": 5
+    },
+    {
+      "http://localhost:3005/notes": "",
+      "id": 6
+    },
+    {
+      "http://localhost:3005/notes": "",
+      "id": 7
+    },
+    {
+      "content": "ericsa",
+      "id": 8
+    },
+    {
+      "name": "erica",
+      "number": "978",
+      "id": 9
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    }
+  ]
+}
