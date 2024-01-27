@@ -1,0 +1,44 @@
+.all-blog-container {
+  width: 70%;
+}
+
+.blog {
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  margin-bottom: 20px;
+}
+
+.blog h2, .blog p {
+  margin: 0;
+}
+
+.blog-user {
+  background-color: rgb(251, 242, 247);
+}
+
+.button-container{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: rgb(236, 235, 235);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: rgb(251, 168, 168);
+  color: white;
+}
+
+.logged-in {
+  text-align: right;
+}
+
+.add-blog {
+  background-color: rgb(236, 159, 186);
+}
