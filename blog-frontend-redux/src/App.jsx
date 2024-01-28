@@ -27,21 +27,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [])
-
-
-  // useEffect(() => {
-  //   const fetchBlogs = async () => {
-  //     const allBlogs = await blogService.getAll()
-  //     setBlogs(allBlogs.sort((a, b) => b.likes - a.likes))
-  //   }
-
-  //   try {
-  //     fetchBlogs()
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -97,30 +83,30 @@ function App() {
     console.log('Form submitted')
   }
 
-  const handleEdit = (id, eTitle, eAuthor, eUrl) => {
+  // const handleEdit = (id, eTitle, eAuthor, eUrl) => {
 
-    setIsEdit(!isEdit)
-    setEditID(id)
-    setTitle(eTitle)
-    setUrl(eUrl)
-    setAuthor(eAuthor)
-  }
+  //   setIsEdit(!isEdit)
+  //   setEditID(id)
+  //   setTitle(eTitle)
+  //   setUrl(eUrl)
+  //   setAuthor(eAuthor)
+  // }
 
-  const handleEditSave = async () => {
-    setIsEdit(!isEdit)
+  // const handleEditSave = async () => {
+  //   setIsEdit(!isEdit)
 
-    const filtered = blogs.filter((blog) => blog._id === editID)
-    const updatedBlog = { ...filtered[0], title, url, author }
+  //   const filtered = blogs.filter((blog) => blog._id === editID)
+  //   const updatedBlog = { ...filtered[0], title, url, author }
 
-    const updatedBlogs = blogs.map((blog) =>
-      blog._id === editID ? updatedBlog : blog
-    )
-    console.log(updatedBlogs)
+  //   const updatedBlogs = blogs.map((blog) =>
+  //     blog._id === editID ? updatedBlog : blog
+  //   )
+  //   console.log(updatedBlogs)
 
-    await blogService.updateBlog(editID, updatedBlog)
+  //   await blogService.updateBlog(editID, updatedBlog)
 
-    setBlogs(updatedBlogs)
-  }
+  //   setBlogs(updatedBlogs)
+  // }
 
   const handlelikes = async (e) => {
     const id = e.target.getAttribute('value')
@@ -209,11 +195,6 @@ function App() {
         </div>
       )}
       <Blogs
-        edit={handleEdit}
-        isEdit={isEdit}
-        editID={editID}
-        inputChange={handleInputChanges}
-        save={handleEditSave}
         like={handlelikes}
         handleDelete={handleDelete}
         user={user}

@@ -1,17 +1,33 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setEdit, saveEdit } from '../reducers/editReducer'
+import { useField } from '../hooks'
+
 
 const Blogs = ({
-  edit,
-  isEdit,
-  editID,
-  inputChange,
+  // inputChange,
   save,
   like,
   handleDelete,
   user,
 }) => {
   const blogs = useSelector((state) => state.blogs)
+  const sortedBlogs = [...blogs].sort((a, b) => b.votes - a.votes)
+
+  const dispatch = useDispatch()
+
+  const handleEdit = (id, title, author, url) => {
+    dispatch(setEdit({ id, title, author, url }))
+  }
+  const isEditID = useSelector((state) => state.edit.id)
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
+
+
+  const handleEditSave = () => {
+
+  }
 
   const [showBlogs, setShowBlogs] = useState([])
 
@@ -28,7 +44,7 @@ const Blogs = ({
   return (
     <div>
       <h1>All Blogs</h1>
-      {blogs.map((blog) => {
+      {sortedBlogs.map((blog) => {
         const showButtonsWhenUserLoggedIn = {
           display: user !== null && user.id === blog.user ? '' : 'none',
         }
@@ -36,11 +52,11 @@ const Blogs = ({
           <div key={blog._id} className={user && blog.user === user.id ? 'all-blog-container blog-user' : 'all-blog-container'}>
             <div className="blog">
               <h2>
-                {isEdit && blog._id === editID ? (
+                {isEditID === blog._id ? (
                   <input
                     defaultValue={blog.title}
-                    onChange={inputChange}
                     name={'title'}
+                    {...title}
                   ></input>
                 ) : (
                   blog.title
@@ -62,11 +78,11 @@ const Blogs = ({
             >
               <p>
                 URL:{' '}
-                {isEdit && blog._id === editID ? (
+                {isEditID === blog._id? (
                   <input
                     defaultValue={blog.url}
-                    onChange={inputChange}
                     name={'url'}
+                    {...url}
                   ></input>
                 ) : (
                   blog.url
@@ -74,11 +90,11 @@ const Blogs = ({
               </p>
               <p>
                 Author:{' '}
-                {isEdit && blog._id === editID ? (
+                {isEditID === blog._id ? (
                   <input
                     defaultValue={blog.author}
-                    onChange={inputChange}
                     name={'author'}
+                    {...author}
                   ></input>
                 ) : (
                   blog.author
@@ -91,11 +107,11 @@ const Blogs = ({
                 <div className="button-container">
                   <button onClick={like} value={blog._id}>{'<3'}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
-                    {isEdit ? (
+                    {isEditID ? (
                       <button onClick={save}>Save</button>
                     ) : (
                       <button
-                        onClick={() => edit(blog._id, blog.title, blog.author, blog.url)}
+                        onClick={() => handleEdit(blog._id, blog.title, blog.author, blog.url)}
                       >
                         Edit
                       </button>
