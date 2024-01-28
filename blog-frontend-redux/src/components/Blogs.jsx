@@ -19,14 +19,20 @@ const Blogs = ({
   const handleEdit = (id, title, author, url) => {
     dispatch(setEdit({ id, title, author, url }))
   }
-  const isEditID = useSelector((state) => state.edit.id)
-  const title = useField('text')
-  const author = useField('text')
-  const url = useField('text')
+  const isEdit = useSelector((state) => state.edit)
+  const title = useField('text', 'title')
+  const author = useField('text', 'author')
+  const url = useField('text', 'url')
 
 
   const handleEditSave = () => {
+  }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    title.onReset()
+    author.onReset()
+    url.onReset()
   }
 
   const [showBlogs, setShowBlogs] = useState([])
@@ -52,7 +58,7 @@ const Blogs = ({
           <div key={blog._id} className={user && blog.user === user.id ? 'all-blog-container blog-user' : 'all-blog-container'}>
             <div className="blog">
               <h2>
-                {isEditID === blog._id ? (
+                {isEdit.id === blog._id ? (
                   <input
                     defaultValue={blog.title}
                     name={'title'}
@@ -78,7 +84,7 @@ const Blogs = ({
             >
               <p>
                 URL:{' '}
-                {isEditID === blog._id? (
+                {isEdit.id === blog._id? (
                   <input
                     defaultValue={blog.url}
                     name={'url'}
@@ -90,7 +96,7 @@ const Blogs = ({
               </p>
               <p>
                 Author:{' '}
-                {isEditID === blog._id ? (
+                {isEdit.id === blog._id ? (
                   <input
                     defaultValue={blog.author}
                     name={'author'}
@@ -107,8 +113,11 @@ const Blogs = ({
                 <div className="button-container">
                   <button onClick={like} value={blog._id}>{'<3'}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
-                    {isEditID ? (
-                      <button onClick={save}>Save</button>
+                    {isEdit.id ? (
+                      <span>
+                        <button onClick={save}>Save</button>
+                        <button onClick={handleReset}>Cancel</button>
+                      </span>
                     ) : (
                       <button
                         onClick={() => handleEdit(blog._id, blog.title, blog.author, blog.url)}

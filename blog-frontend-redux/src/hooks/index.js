@@ -1,19 +1,23 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setEdit, resetEdit } from '../reducers/editReducer'
 
-export const useField = (type) => {
-  const [value, setValue] = useState('')
+export const useField = (type, name) => {
+
+  const edit = useSelector((state) => state.edit)
+  const dispatch = useDispatch()
 
   const onChange = (event) => {
-    setValue(event.target.value)
+    dispatch(setEdit({ ...edit, [name]: event.target.value }))
   }
 
   const onReset = () => {
-    setValue('')
+    dispatch(resetEdit())
   }
 
   return {
     type,
-    value,
+    value: edit[type],
     onChange,
     onReset
   }
