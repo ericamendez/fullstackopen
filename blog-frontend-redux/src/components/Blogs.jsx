@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setEdit, saveEdit } from '../reducers/editReducer'
+
 import { useField } from '../hooks'
+import { likeBlog } from '../reducers/blogsReducer'
 
 
 const Blogs = ({
-  // inputChange,
-  save,
-  like,
   handleDelete,
   user,
 }) => {
@@ -16,17 +15,13 @@ const Blogs = ({
 
   const dispatch = useDispatch()
 
-  const handleEdit = (id, title, author, url) => {
-    dispatch(setEdit({ id, title, author, url }))
+  const handleEdit = (id, title, author, url, likes) => {
+    dispatch(setEdit({ id, title, author, url, likes }))
   }
-  const isEdit = useSelector((state) => state.edit)
+  const edit = useSelector((state) => state.edit)
   const title = useField('text', 'title')
   const author = useField('text', 'author')
   const url = useField('text', 'url')
-
-
-  const handleEditSave = () => {
-  }
 
   const handleReset = (e) => {
     e.preventDefault()
@@ -58,7 +53,7 @@ const Blogs = ({
           <div key={blog._id} className={user && blog.user === user.id ? 'all-blog-container blog-user' : 'all-blog-container'}>
             <div className="blog">
               <h2>
-                {isEdit.id === blog._id ? (
+                {edit.id === blog._id ? (
                   <input
                     defaultValue={blog.title}
                     name={'title'}
@@ -84,7 +79,7 @@ const Blogs = ({
             >
               <p>
                 URL:{' '}
-                {isEdit.id === blog._id? (
+                {edit.id === blog._id? (
                   <input
                     defaultValue={blog.url}
                     name={'url'}
@@ -96,7 +91,7 @@ const Blogs = ({
               </p>
               <p>
                 Author:{' '}
-                {isEdit.id === blog._id ? (
+                {edit.id === blog._id ? (
                   <input
                     defaultValue={blog.author}
                     name={'author'}
@@ -111,16 +106,16 @@ const Blogs = ({
                 ''
               ) : (
                 <div className="button-container">
-                  <button onClick={like} value={blog._id}>{'<3'}</button>
+                  <button onClick={() => dispatch(likeBlog(blog._id))} value={blog._id}>{'<3'}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
-                    {isEdit.id ? (
+                    {edit.id ? (
                       <span>
-                        <button onClick={save}>Save</button>
+                        <button onClick={() => dispatch(saveEdit(edit))}>Save</button>
                         <button onClick={handleReset}>Cancel</button>
                       </span>
                     ) : (
                       <button
-                        onClick={() => handleEdit(blog._id, blog.title, blog.author, blog.url)}
+                        onClick={() => handleEdit(blog._id, blog.title, blog.author, blog.url, blog.likes)}
                       >
                         Edit
                       </button>

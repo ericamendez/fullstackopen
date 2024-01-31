@@ -10,17 +10,32 @@ const blogSlice = createSlice({
     },
     appendBlog(state, action){
       state.push(action.payload)
-    },
+    }
   }
 })
 
-export const { setBlogs, editBlog, appendBlog } = blogSlice.actions
+export const { setBlogs, editBlog, appendBlog, saveEditReducer, likedBlog } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
     const blogs = await blogServices.getAll()
-    console.log(blogs)
     dispatch(setBlogs(blogs))
+  }
+}
+
+export const likeBlog = (id, likesObj) => {
+  return async (dispatch, getState) => {
+    const blogs = getState().blogs
+    const filtered = blogs.filter((blog) => blog._id === id)
+
+    const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 }
+
+    await blogServices.updateLikes(id, likesObject)
+
+    const newBlogs = blogs.map((blog) =>
+      blog._id === id ? likesObject : blog
+    )
+    dispatch(setBlogs(newBlogs))
   }
 }
 

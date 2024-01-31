@@ -12,12 +12,9 @@ import loginService from './services/login'
 import { initializeBlogs } from './reducers/blogsReducer'
 
 function App() {
-  // const [blogs, setBlogs] = useState([])
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
   const [author, setAuthor] = useState('')
-  const [isEdit, setIsEdit] = useState(false)
-  const [editID, setEditID] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -81,46 +78,6 @@ function App() {
     }
 
     console.log('Form submitted')
-  }
-
-  // const handleEdit = (id, eTitle, eAuthor, eUrl) => {
-
-  //   setIsEdit(!isEdit)
-  //   setEditID(id)
-  //   setTitle(eTitle)
-  //   setUrl(eUrl)
-  //   setAuthor(eAuthor)
-  // }
-
-  // const handleEditSave = async () => {
-  //   setIsEdit(!isEdit)
-
-  //   const filtered = blogs.filter((blog) => blog._id === editID)
-  //   const updatedBlog = { ...filtered[0], title, url, author }
-
-  //   const updatedBlogs = blogs.map((blog) =>
-  //     blog._id === editID ? updatedBlog : blog
-  //   )
-  //   console.log(updatedBlogs)
-
-  //   await blogService.updateBlog(editID, updatedBlog)
-
-  //   setBlogs(updatedBlogs)
-  // }
-
-  const handlelikes = async (e) => {
-    const id = e.target.getAttribute('value')
-
-    const filtered = blogs.filter((blog) => blog._id === id)
-    const likesObject = { ...filtered[0], likes: filtered[0].likes + 1 }
-
-    const newObject = blogs.map((blog) =>
-      blog._id === id ? likesObject : blog
-    )
-
-    await blogService.likeBlog(id, likesObject)
-
-    setBlogs(newObject.sort((a, b) => b.likes - a.likes))
   }
 
   const handleDelete = async (e) => {
@@ -195,7 +152,6 @@ function App() {
         </div>
       )}
       <Blogs
-        like={handlelikes}
         handleDelete={handleDelete}
         user={user}
       />

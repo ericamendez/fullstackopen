@@ -7,6 +7,7 @@ const anecdoteSlice = createSlice({
   reducers: {
     vote(state, action){
       console.log('act',action.payload); // createSlice will automatically create action creators for each reducer function, and what is being returned is in action.payload
+      console.log('state',state);
       return state.map(anecdote => anecdote.id === action.payload.id ? action.payload : anecdote)
     },
     appendAnecdote(state, action){

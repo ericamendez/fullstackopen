@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogServices from '../services/blogs'
-import { appendBlog } from './blogsReducer'
+import { saveEditReducer, setBlogs } from './blogsReducer'
 
 const editSlice = createSlice({
   name: 'edit',
@@ -9,6 +9,7 @@ const editSlice = createSlice({
     title: '',
     url: '',
     author: '',
+    likes: null,
   },
   reducers: {
     setEdit(_, action){
@@ -20,6 +21,7 @@ const editSlice = createSlice({
         title: '',
         url: '',
         author: '',
+        likes: null,
       }
     }
   }
@@ -29,9 +31,16 @@ export const { setEdit, resetEdit } = editSlice.actions
 
 export const saveEdit = blog => {
   return async (dispatch, getState) => {
+    const blogs = getState().blogs
+
+    const filtered = blogs.filter(b => b._id === blog.id)
+    const updatedBlog = { ...filtered[0], title: blog.title, author: blog.author, url: blog.url }
+
+    const newState = blogs.map(b => b._id === blog.id ? updatedBlog : b)
+    await blogServices.updateBlog(blog.id, updatedBlog)
+
+    dispatch(setBlogs(newState))
     dispatch(resetEdit())
-    const savedBlog = await blogServices.updateBlog(blog)
-    dispatch(appendBlog(savedBlog))
   }
 }
 
