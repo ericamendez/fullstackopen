@@ -23,6 +23,14 @@ export const initializeBlogs = () => {
   }
 }
 
+export const createBlog = blog => {
+  return async (dispatch) => {
+    const newBlog = await blogServices.createBlog(blog)
+    dispatch(appendBlog(newBlog))
+  }
+
+}
+
 export const likeBlog = (id, likesObj) => {
   return async (dispatch, getState) => {
     const blogs = getState().blogs
@@ -36,6 +44,22 @@ export const likeBlog = (id, likesObj) => {
       blog._id === id ? likesObject : blog
     )
     dispatch(setBlogs(newBlogs))
+  }
+}
+
+export const handleDelete = id => {
+  return async (dispatch, getState) => {
+    if (!window.confirm('Are you sure you want to delete')) {
+      return
+    }
+
+    const blogs = getState().blogs
+
+    const updatedBlogs = blogs.filter((blog) => blog._id !== id)
+
+    await blogServices.deleteBlog(id)
+
+    dispatch(setBlogs(updatedBlogs))
   }
 }
 

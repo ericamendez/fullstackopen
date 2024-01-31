@@ -3,11 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setEdit, saveEdit } from '../reducers/editReducer'
 
 import { useField } from '../hooks'
-import { likeBlog } from '../reducers/blogsReducer'
+import { likeBlog, handleDelete } from '../reducers/blogsReducer'
 
 
 const Blogs = ({
-  handleDelete,
   user,
 }) => {
   const blogs = useSelector((state) => state.blogs)
@@ -106,7 +105,7 @@ const Blogs = ({
                 ''
               ) : (
                 <div className="button-container">
-                  <button onClick={() => dispatch(likeBlog(blog._id))} value={blog._id}>{'<3'}</button>
+                  <button onClick={() => dispatch(likeBlog(blog._id))}>{'<3'}</button>
                   <div style={showButtonsWhenUserLoggedIn}>
                     {edit.id ? (
                       <span>
@@ -120,7 +119,7 @@ const Blogs = ({
                         Edit
                       </button>
                     )}
-                    <button onClick={handleDelete} value={blog._id} className="delete-button">
+                    <button onClick={() => dispatch(handleDelete(blog._id))} className="delete-button">
                       Delete
                     </button>
                   </div>

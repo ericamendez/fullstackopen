@@ -80,20 +80,6 @@ function App() {
     console.log('Form submitted')
   }
 
-  const handleDelete = async (e) => {
-    if (!window.confirm('Are you sure you want to delete')) {
-      return
-    }
-
-    const id = e.target.getAttribute('value')
-
-    const updatedBlogs = blogs.filter((blog) => blog._id !== id)
-
-    await blogService.deleteBlog(id)
-
-    setBlogs(updatedBlogs)
-  }
-
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
@@ -152,7 +138,6 @@ function App() {
         </div>
       )}
       <Blogs
-        handleDelete={handleDelete}
         user={user}
       />
     </div>
