@@ -1,4 +1,17 @@
-const BlogForm = ({ inputChange, submit }) => {
+import { useDispatch, useSelector } from 'react-redux'
+import { useFieldCreate } from '../hooks'
+import { createBlog } from '../reducers/blogsReducer'
+
+
+const BlogForm = () => {
+
+  const title = useFieldCreate('text', 'title')
+  const url = useFieldCreate('text', 'url')
+  const author = useFieldCreate('text', 'author')
+
+  const newBlog = useSelector((state) => state.createBlog)
+
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -6,17 +19,17 @@ const BlogForm = ({ inputChange, submit }) => {
       <form>
         <div>
           <label>Title:</label>
-          <input type="text" onChange={inputChange} required name="title" placeholder='input title' id="title" />
+          <input {...title} required name="title" placeholder='input title' id="title" />
         </div>
         <div>
           <label>URL:</label>
-          <input type="text" required onChange={inputChange} name="url" id="url" />
+          <input {...url} required name="url" id="url" />
         </div>
         <div>
           <label>Author:</label>
-          <input type="text" required onChange={inputChange} name="author" id="author" />
+          <input {...author}required name="author" id="author" />
         </div>
-        <button onClick={submit}>Submit</button>
+        <button onClick={() => dispatch(createBlog(newBlog))}>Submit</button>
       </form>
     </div>
   )

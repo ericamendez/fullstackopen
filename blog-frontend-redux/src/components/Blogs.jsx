@@ -1,44 +1,33 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setEdit, saveEdit } from '../reducers/editReducer'
-
-import { useField } from '../hooks'
 import { likeBlog, handleDelete } from '../reducers/blogsReducer'
+import { setEdit, saveEdit } from '../reducers/editReducer'
+import { toggleShowMoreBlog } from '../reducers/toggleReducer'
+import { useField } from '../hooks'
 
 
-const Blogs = ({
-  user,
-}) => {
+const Blogs = () => {
   const blogs = useSelector((state) => state.blogs)
   const sortedBlogs = [...blogs].sort((a, b) => b.votes - a.votes)
+  const showBlogs = useSelector((state) => state.toggle.showMoreBlog)
+  const user = useSelector((state) => state.login.user)
 
   const dispatch = useDispatch()
 
-  const handleEdit = (id, title, author, url, likes) => {
-    dispatch(setEdit({ id, title, author, url, likes }))
-  }
   const edit = useSelector((state) => state.edit)
   const title = useField('text', 'title')
   const author = useField('text', 'author')
   const url = useField('text', 'url')
+
+  const handleEdit = (id, title, author, url, likes) => {
+    dispatch(setEdit({ id, title, author, url, likes }))
+  }
 
   const handleReset = (e) => {
     e.preventDefault()
     title.onReset()
     author.onReset()
     url.onReset()
-  }
-
-  const [showBlogs, setShowBlogs] = useState([])
-
-  const toggleShowMore = (e) => {
-    const id = e.target.getAttribute('value')
-
-    if (showBlogs.includes(id)) {
-      setShowBlogs(showBlogs.filter((blogId) => blogId !== id))
-    } else {
-      setShowBlogs([...showBlogs, id])
-    }
   }
 
   return (
@@ -63,7 +52,7 @@ const Blogs = ({
                 )}
               </h2>
               <div>
-                <button onClick={toggleShowMore} value={blog._id}>
+                <button onClick={() => dispatch(toggleShowMoreBlog(blog._id))} value={blog._id}>
                   {showBlogs.includes(blog._id) ? 'hide' : 'view'}
                 </button>
               </div>
