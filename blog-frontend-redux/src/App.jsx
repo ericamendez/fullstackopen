@@ -7,18 +7,11 @@ import Login from './components/Login'
 import Togglable from './components/Togglable'
 import './App.css'
 
-import blogService from './services/blogs'
-import loginService from './services/login'
 import { initializeBlogs } from './reducers/blogsReducer'
 import { setLogin } from './reducers/loginReducer'
+import blogService from './services/blogs'
 
 function App() {
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-  const [author, setAuthor] = useState('')
-  const [loginVisible, setLoginVisible] = useState(false)
-
-  const user = useSelector((state) => state.login.user)
 
   const dispatch = useDispatch()
 
@@ -26,9 +19,18 @@ function App() {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const handleShowLogin = () => {
-    setLoginVisible(!loginVisible)
-  }
+  const user = useSelector((state) => state.login.user)
+  const login = useSelector((state) => state.login)
+
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const userObj = JSON.parse(loggedUserJSON)
+      dispatch(setLogin({ ...login, user: userObj }))
+      blogService.setToken(userObj.token)
+    }
+  }, [])
 
   return (
     <div>

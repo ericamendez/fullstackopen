@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogServices from '../services/blogs'
-import { saveEditReducer, setBlogs } from './blogsReducer'
+import { setBlogs } from './blogsReducer'
 
 const editSlice = createSlice({
   name: 'edit',
