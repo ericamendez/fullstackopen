@@ -22,7 +22,6 @@ function App() {
   const user = useSelector((state) => state.login.user)
   const login = useSelector((state) => state.login)
 
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
