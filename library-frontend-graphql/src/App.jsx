@@ -1,0 +1,42 @@
+import { useState } from 'react'
+import Authors from './components/Authors'
+import Books from './components/Books'
+import NewBook from './components/NewBook'
+import { useQuery } from "@apollo/client"
+import { useMutation } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, ADD_BOOK } from "./queries"
+
+const App = () => {
+  const [page, setPage] = useState('authors')
+
+  const resultAuthors = useQuery(ALL_AUTHORS)
+  
+  const resultBooks = useQuery(ALL_BOOKS)
+
+  const [createBook] = useMutation(ADD_BOOK, {
+    refetchQueries: [  {query: ALL_BOOKS } ],
+    onError: (error) => {
+      console.log(error)
+    },
+  });
+
+  return (
+    <div>
+      <div>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('add')}>add book</button>
+      </div>
+      {resultAuthors.loading ? <div>loading...</div> : null}
+      {resultAuthors.data ? (
+        <Authors data={resultAuthors.data} show={page === 'authors'} />
+      ) : null }
+
+      <Books data={resultBooks.data} show={page === 'books'}/>
+
+      <NewBook add={createBook} show={page === 'add'} />
+    </div>
+  )
+}
+
+export default App

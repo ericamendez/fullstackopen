@@ -120,6 +120,15 @@ const typeDefs = `
     allBooks: [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String
+      published: Int!
+      genres: [String!]
+    ): Book
+  }
 `
 
 const resolvers = {
@@ -142,6 +151,13 @@ const resolvers = {
     id: (root) => root.id,
     born: (root) => root.born,
     bookCount: (root) => books.filter(b => b.author === root.name).length
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      return books
+    }
   }
 }
 
