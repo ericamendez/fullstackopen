@@ -9,6 +9,13 @@ const NewBook = (props) => {
     onError: (error) => {
       console.log(error)
     },
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(response.data.addBook),
+        }
+      })
+    },
   });
 
   const [title, setTitle] = useState('')

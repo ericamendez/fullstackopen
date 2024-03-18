@@ -3,9 +3,6 @@ const Books = (props) => {
     return null
   }
 
-
-  const books = props.data.allBooks
-
   return (
     <div>
       <h2>books</h2>
@@ -17,13 +14,13 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
+          {props.data ? props.data.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
-          ))}
+          )) : null}
         </tbody>
       </table>
     </div>
